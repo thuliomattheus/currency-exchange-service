@@ -1,4 +1,4 @@
-package com.in28minutes.microservices.currencyexchangeservice;
+package com.in28minutes.microservices.currencyexchangeservice.dto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

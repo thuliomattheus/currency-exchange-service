@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.in28minutes.microservices.currencyexchangeservice.CurrencyExchangeDto;
+import com.in28minutes.microservices.currencyexchangeservice.dto.CurrencyExchangeDto;
 
 @RestController
 @RequestMapping("/currency-exchange")
