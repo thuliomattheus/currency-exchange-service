@@ -1,0 +1,63 @@
+version: '3.7'
+
+networks:
+  currency-network:
+
+services:
+  naming-server:
+    image: microservices-udemy-course/naming-server:0.0.1-SNAPSHOT
+    ports:
+      - "8761:8761"
+    networks:
+      - currency-network
+
+  currency-exchange:
+    image: microservices-udemy-course/currency-exchange-service:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8000:8000"
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "eureka.client.serviceUrl.defaultZone": "http://naming-server:8761/eureka",
+        "spring.zipkin.baseUrl": "http://zipkin:9411"
+      }'
+
+  currency-conversion:
+    image: microservices-udemy-course/currency-conversion-service:0.0.1-SNAPSHOT
+    ports:
+      - "8100:8100"
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+      - currency-exchange
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "eureka.client.serviceUrl.defaultZone": "http://naming-server:8761/eureka",
+        "spring.zipkin.baseUrl": "http://zipkin:9411"
+      }'
+
+  api-gateway:
+    image: microservices-udemy-course/api-gateway:0.0.1-SNAPSHOT
+    ports:
+      - "8765:8765"
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "eureka.client.serviceUrl.defaultZone": "http://naming-server:8761/eureka",
+        "spring.zipkin.baseUrl": "http://zipkin:9411"
+      }'
+
+  zipkin:
+    image: openzipkin/zipkin:2.23
+    ports:
+      - "9411:9411"
+    networks:
+      - currency-network
